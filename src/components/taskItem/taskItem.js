@@ -10,12 +10,14 @@ export default function TaskItem(props){
     const [input,setInput] = useState(task.taskName);
     const [btnVisible, setBtnVisible] = useState(false);
 
-    const Wrap = styled.div`${tw`flex font-thin text-black bg-white justify-evenly items-center border border-bottom[1px] border-color[gray] w-full h-[60px]`}`;
+    const Wrap = styled.div`${tw`flex font-thin text-black bg-white justify-evenly items-center border  border-color[gray] w-full h-[60px]`}`;
 
     const Icon = styled.input`${tw`w-10 h-10 outline-none`}`;
 
     const Task = styled.input`${tw`items-center w-full h-full p-2 text-xl font-thin bg-transparent outline-none`}
-        ${(edit? tw`border border-gray-200 shadow-md` : tw`border-none`)}`;
+        ${(edit? tw`border border-gray-200 shadow-md` : tw`border-none`)}
+        ${task.complete ? tw`text-gray-200 line-through` : ""};
+        `;
 
     const DeleteBtn = styled.button`${tw`w-10 h-10 text-[#cc9a9a] transition duration-1000 ease-in-out`}
     ${(btnVisible ? tw`visible` : tw`invisible`)}`;

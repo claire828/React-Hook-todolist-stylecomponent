@@ -4,7 +4,7 @@ import tw from "twin.macro";
 
 
 export default function Headers(props){
-    const {addTask} = props; 
+    const {addTask,tick} = props; 
     const DEFAULT_MSG = 'What need to be done?';
     
     const Wrap = styled.div`${tw`flex flex-col w-[550px] mx-auto align-middle`}`;
@@ -20,7 +20,6 @@ export default function Headers(props){
 
 
     const onAddTask = (e)=>{
-        console.log(`onAddTask:${input}`);
         addTask(input);
         setInput('');
     }
@@ -30,7 +29,7 @@ export default function Headers(props){
         <Wrap>
             <Title>todos</Title>
             <InputContainer>
-                <Icon/>
+                <Icon onClick={e=>tick(e)} />
                 <Input placeholder={DEFAULT_MSG} 
                     onBlur={onAddTask} 
                     value={input} 
