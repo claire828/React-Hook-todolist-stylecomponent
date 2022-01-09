@@ -376,14 +376,27 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mb-10 {
   margin-bottom: 2.5rem;
 }
+.flex {
+  display: flex;
+}
 .grid {
   display: grid;
+}
+.h-full {
+  height: 100%;
 }
 .h-screen {
   height: 100vh;
 }
+.w-screen {
+  width: 100vw;
+}
 .w-3\/4 {
   width: 75%;
+}
+.bg-blue-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
 }
 .bg-green-800 {
   --tw-bg-opacity: 1;
