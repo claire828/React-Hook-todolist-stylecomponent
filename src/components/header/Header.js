@@ -36,7 +36,6 @@ export default function Headers(props){
                 <Input placeholder={DEFAULT_MSG} 
                     onBlur={onAddTask} 
                     ref={taskRef}
-                    defaultValue={taskRef.current.value}
                     onKeyPress={e=> e.key === 'Enter' && onAddTask(e) }
                     //value={input} 
                     //onInput={e => setInput(e.target.value)} 
