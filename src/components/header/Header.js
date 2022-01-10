@@ -21,8 +21,12 @@ export default function Headers(props){
 
 
     const onAddTask = (e)=>{
-        addTask(taskRef.current.value);
+        const text = taskRef.current.value.trim();
         taskRef.current.value = "";
+        if(!text) return;
+        
+        addTask(text);
+        
         //addTask(input);
         //setInput('');
     }
