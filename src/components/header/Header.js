@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRef } from "react/cjs/react.development";
 import styled from "styled-components/macro";
 import tw from "twin.macro";
 
@@ -15,13 +16,15 @@ export default function Headers(props){
     const Icon = styled.label`${tw`absolute before:content-['❯'] font-size[22px] text-[#e6e6e6] mx-4 mt-4`} 
         transform: rotate(90deg) `;
         
-    //current input that user types
-    const [input, setInput] = useState(''); 
+    //const [input, setInput] = useState(''); 
+    const taskRef = useRef('');
 
 
     const onAddTask = (e)=>{
-        addTask(input);
-        setInput('');
+        addTask(taskRef.current.value);
+        taskRef.current.value = "";
+        //addTask(input);
+        //setInput('');
     }
 
 
@@ -32,9 +35,11 @@ export default function Headers(props){
                 <Icon onClick={e=>tick(e)} />
                 <Input placeholder={DEFAULT_MSG} 
                     onBlur={onAddTask} 
-                    value={input} 
+                    ref={taskRef}
+                    defaultValue={taskRef.current.value}
                     onKeyPress={e=> e.key === 'Enter' && onAddTask(e) }
-                    onInput={e => setInput(e.target.value)} 
+                    //value={input} 
+                    //onInput={e => setInput(e.target.value)} 
                     autoFocus />
             </InputContainer>
         </Wrap>

@@ -1,0 +1,11 @@
+.delete{
+    display: none;
+  }
+
+  .wrap:hover{
+    .delete{
+      display: block;
+    }
+  }
+  
+  

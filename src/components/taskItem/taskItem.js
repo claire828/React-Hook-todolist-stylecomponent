@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { useEffect } from "react/cjs/react.development";
 import styled from "styled-components/macro";
 import tw from "twin.macro";
-
 
 export default function TaskItem(props){
     const task = props.task;
     const [edit, setEdit] = useState(false);
     const [input,setInput] = useState(task.taskName);
-    const [btnVisible, setBtnVisible] = useState(false);
 
-    const Wrap = styled.div`${tw`flex font-thin text-black bg-white justify-evenly items-center border  border-color[gray] w-full h-[60px]`}`;
+    const Wrap = styled.div`${tw`flex font-thin text-black bg-white justify-evenly items-center border
+      border-color[gray] w-full h-[60px] `}`;
 
     const Icon = styled.input`${tw`w-10 h-10 outline-none`}`;
 
@@ -19,8 +17,7 @@ export default function TaskItem(props){
         ${task.complete ? tw`text-gray-200 line-through` : ""};
         `;
 
-    const DeleteBtn = styled.button`${tw`w-10 h-10 text-[#cc9a9a] transition duration-1000 ease-in-out`}
-    ${(btnVisible ? tw`visible` : tw`invisible`)}`;
+    const DeleteBtn = styled.button`${tw`w-10 h-10 text-[#cc9a9a] transition duration-1000 ease-in-out`}`;
      
 
     const finishEdit = ()=>{
@@ -34,7 +31,7 @@ export default function TaskItem(props){
 
 
     return <>
-            <Wrap onMouseOver={(e)=> setBtnVisible(true)} onMouseLeave={(e)=>setBtnVisible(false)} >
+            <Wrap className="wrap" >
                 <Icon type={'text'}/>
                 <Task value={input} 
                     readOnly={!edit}
@@ -44,9 +41,7 @@ export default function TaskItem(props){
                     onKeyPress={e=> {e.key === 'Enter' && finishEdit()} }
                     onDoubleClick={(e)=>{ setEdit(true)}}></Task>
 
-                <DeleteBtn 
-                    hidden={edit}
-                    disabled={!btnVisible}
+                <DeleteBtn className="delete"
                     onClick={(e)=>props.delete(task.taskId)}>X</DeleteBtn>
             </Wrap>
         </>

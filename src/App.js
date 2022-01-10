@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components/macro";
 import tw from "twin.macro";
 import Footer from "./components/footer/footer";
 import Headers from "./components/header/Header";
 import TaskItem from "./components/taskItem/taskItem";
 import "./index.css";
+import "./scss/taskItem.scss";
 import createTask from "./utilities/hooks/createTask";
 
 
@@ -31,37 +32,38 @@ function App() {
   const displayTaskList =  menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
 
  
-  const addTask = (taskName)=>{
+  
+  const addTask =  useCallback((taskName)=>{
     if(!taskName) return;
     const task = createTask(taskName);
-    setTasks([...tasks,task]);
-  }
+    setTasks(tasks=>[...tasks,task]);
+  },[]);
 
-  const deleteTask = (taskId)=>{
+  const deleteTask = useCallback((taskId)=>{
     if(!taskId) return;
-    setTasks(tasks.filter(x=>x.taskId !== taskId));
-  }
+    setTasks(tasks=>tasks.filter(x=>x.taskId !== taskId));
+  },[]);
 
 
-  const renameTask = (taskId, newName)=>{
+  const renameTask = useCallback((taskId, newName)=>{
     if(!(newName&&taskId)) return;
-     setTasks([...tasks.reduce( (result,curr)=>{
+     setTasks(tasks=>[...tasks.reduce( (result,curr)=>{
       if(curr.taskId === taskId) return [...result, {...curr, taskName:newName}];
       return [...result, curr];
      },[])]);
-  }
+  },[]);
 
-  const clearTasks = ()=>{
-    setTasks([...tasks.filter(x=>!x.complete)]);
-  }
+  const clearTasks = useCallback(()=>{
+    setTasks(tasks=>[...tasks.filter(x=>!x.complete)]);
+  },[]);
     
-  const switchTickAll = ()=>{
+  const switchTickAll = useCallback(()=>{
     setTickAll(!tickAll);
     //勾選/取消 全選範圍時，更新所有的狀態
     let newTasks = Object.assign([],tasks);
     newTasks.forEach(x=>x.complete = tickAll);
     setTasks([...newTasks]);
-  }
+  },[tickAll,tasks]);
   
 
   
