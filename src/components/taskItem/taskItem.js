@@ -29,7 +29,7 @@ export default function TaskItem(props){
         if(task.taskName === input) return;
         if(!input) return setInput(task.taskName);
         
-        props.rename(task.taskId, input);
+        props.rename(task.taskId, input.trim());
     }
 
 

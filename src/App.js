@@ -22,15 +22,13 @@ function App() {
 
   //所有的任務區
   const [tasks, setTasks] = useState([]);
-  //顯示區域
-  let [displayTaskList, setDisplayTaskList] = useState([]);
   //目前選單
   const [menuType, setMenuType] = useState(MenuEnum.all);
   //是否有勾選全部
   const [tickAll, setTickAll] = useState(false);
-  //剩餘active
-  const [left, setLeft] = useState(0);
 
+  const left = tasks.filter(x=>!x.complete).length;
+  const displayTaskList =  menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
 
  
   const addTask = (taskName)=>{
@@ -59,30 +57,16 @@ function App() {
     
   const switchTickAll = ()=>{
     setTickAll(!tickAll);
+    //勾選/取消 全選範圍時，更新所有的狀態
+    let newTasks = Object.assign([],tasks);
+    newTasks.forEach(x=>x.complete = tickAll);
+    setTasks([...newTasks]);
   }
   
 
   
-  //勾選/取消 全選範圍時，更新所有的狀態
-  useEffect(()=>{
-      let newTasks = Object.assign([],tasks);
-      newTasks.forEach(x=>x.complete = tickAll);
-      setTasks([...newTasks]);
-    }, [tickAll]);
 
 
-  //每當選單或者列表異動時，要更新列表
-  useEffect(()=>{
-    //console.log('每當選單或者列表異動時，要更新列表')
-    const nextDisplayList = menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
-    setDisplayTaskList(nextDisplayList);
-  },[ menuType, tasks])
-
-
-  //新增 / 刪除任務後的畫面更新
-  useEffect(()=>{
-    setLeft(tasks.filter(x=>!x.complete).length);
-  }, [tasks]);
 
   return (
     <div className="h-screen bg-green-800">
