@@ -16,7 +16,6 @@ export default function Headers(props){
     const Icon = styled.label`${tw`absolute before:content-['❯'] font-size[22px] text-[#e6e6e6] mx-4 mt-4`} 
         transform: rotate(90deg) `;
         
-    //const [input, setInput] = useState(''); 
     const taskRef = useRef('');
 
 
@@ -24,11 +23,7 @@ export default function Headers(props){
         const text = taskRef.current.value.trim();
         taskRef.current.value = "";
         if(!text) return;
-        
         addTask(text);
-        
-        //addTask(input);
-        //setInput('');
     }
 
 

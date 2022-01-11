@@ -6,7 +6,7 @@ import Headers from "./components/header/Header";
 import TaskItem from "./components/taskItem/taskItem";
 import "./index.css";
 import "./scss/taskItem.scss";
-import createTask from "./utilities/hooks/createTask";
+import createTask from "./utilities/createTask";
 
 
 

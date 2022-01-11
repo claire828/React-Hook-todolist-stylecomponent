@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useRef } from "react/cjs/react.development";
 import styled from "styled-components/macro";
 import tw from "twin.macro";
 
 export default function TaskItem(props){
     const task = props.task;
     const [edit, setEdit] = useState(false);
-    const [input,setInput] = useState(task.taskName);
+    const editRef = useRef('');
 
     const Wrap = styled.div`${tw`flex font-thin text-black bg-white justify-evenly items-center border
       border-color[gray] w-full h-[60px] `}`;
@@ -22,22 +23,24 @@ export default function TaskItem(props){
 
     const finishEdit = ()=>{
         setEdit(false);
+        if(task.taskName === editRef.current.value) return;
+
+        const newName = editRef.current.value.trim();
+        if(!newName) editRef.current = task.taskName;
         
-        if(task.taskName === input) return;
-        if(!input) return setInput(task.taskName);
-        
-        props.rename(task.taskId, input.trim());
+        props.rename(task.taskId, newName);
     }
 
 
     return <>
             <Wrap className="wrap" >
                 <Icon type={'text'}/>
-                <Task value={input} 
+                <Task
+                    ref={editRef}
                     readOnly={!edit}
                     autoFocus={edit}
                     onBlur={e=>{ finishEdit()}}
-                    onInput={e=>setInput(e.target.value)} 
+                    defaultValue={task.taskName}
                     onKeyPress={e=> {e.key === 'Enter' && finishEdit()} }
                     onDoubleClick={(e)=>{ setEdit(true)}}></Task>
 
