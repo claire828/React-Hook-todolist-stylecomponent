@@ -15,7 +15,7 @@ export default function TaskItem(props){
 
     const Task = styled.input`${tw`items-center w-full h-full p-2 text-xl font-thin bg-transparent outline-none`}
         ${(edit? tw`border border-gray-200 shadow-md` : tw`border-none`)}
-        ${task.complete ? tw`text-gray-200 line-through` : ""};
+        ${task.complete ? tw`text-gray-200 line-through` : ""}
         `;
 
     const DeleteBtn = styled.button`${tw`w-10 h-10 text-[#cc9a9a] transition duration-1000 ease-in-out`}`;
@@ -28,24 +28,24 @@ export default function TaskItem(props){
         const newName = editRef.current.value.trim();
         if(!newName) editRef.current = task.taskName;
         
-        props.rename(task.taskId, newName);
+        props.rename(task, newName);
     }
 
 
     return <>
             <Wrap className="wrap" >
                 <Icon type={'text'}/>
-                <Task
+                <Task 
                     ref={editRef}
                     readOnly={!edit}
                     autoFocus={edit}
                     onBlur={e=>{ finishEdit()}}
-                    defaultValue={task.taskName}
+                    defaultValue={task.taskName }
                     onKeyPress={e=> {e.key === 'Enter' && finishEdit()} }
                     onDoubleClick={(e)=>{ setEdit(true)}}></Task>
 
                 <DeleteBtn className="delete"
-                    onClick={(e)=>props.delete(task.taskId)}>X</DeleteBtn>
+                    onClick={(e)=>props.delete(task.id)}>X</DeleteBtn>
             </Wrap>
         </>
 }

@@ -8,6 +8,7 @@ import "./index.css";
 import "./scss/taskItem.scss";
 import { TaskContext } from "./utilities/context/context";
 import createTask from "./utilities/createTask";
+import makeAxiosRequest from "./utilities/hooks/makeAxiosRequest";
 
 
 
@@ -16,6 +17,8 @@ export const MenuEnum = {
   'active':1,
   'complete':2
 }
+
+const DefaultUrl = "http://localhost:3004/tasks/"
 
 
 
@@ -28,56 +31,80 @@ function App() {
   const [menuType, setMenuType] = useState(MenuEnum.all);
   //是否有勾選全部
   const [tickAll, setTickAll] = useState(false);
-  //const [left,useLeft] = useState(tasks.filter(x=>!x.complete).length)
 
-  //const displayTaskList =  menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
-  const displayRef = useRef([]);
- 
+  const taskRef = useRef([]);
+  taskRef.current = menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
+  
+  
+
+  useEffect(()=>{
+    const [source, request] = makeAxiosRequest("GET",DefaultUrl);
+    const sendReq = async()=>{
+      const result = await request();
+      if(result) setTasks(result);
+    }
+    sendReq();
+    return ()=> source.cancel();
+  },[])
   
   const addTask =  useCallback((taskName)=>{
     if(!taskName) return;
-    const task = createTask(taskName);
-    setTasks([...tasks,task]);
-  },[tasks]);
+    let task = createTask(taskName);
+    const [source, request] = makeAxiosRequest("POST",DefaultUrl,task);
+    const sendReq = async()=>{
+      task = await request();
+      setTasks(tasks=>[...tasks,task]);
+    }
 
-  const deleteTask = useCallback((taskId)=>{
-    if(!taskId) return;
-    setTasks(tasks=>tasks.filter(x=>x.taskId !== taskId));
+    sendReq();
+  },[]);
+
+  const deleteTask = useCallback((id)=>{
+    if(!id) return;
+
+   const [source, request] = makeAxiosRequest("DELETE",`${DefaultUrl}${id}`);
+    const sendReq = async()=>{
+      await request();
+      setTasks(tasks=>tasks.filter(x=>x.id !== id));
+    }
+    sendReq();
   },[]);
 
 
-  const renameTask = useCallback((taskId, newName)=>{
-    if(!(newName&&taskId)) return;
-     setTasks(tasks=>[...tasks.reduce( (result,curr)=>{
-      if(curr.taskId === taskId) return [...result, {...curr, taskName:newName}];
-      return [...result, curr];
-     },[])]);
+  const renameTask = useCallback((task, newName)=>{
+    if(!(newName&&task.id)) return;
+    const [source, request] = makeAxiosRequest("PATCH",`${DefaultUrl}${task.id}`,{taskName:newName});
+    const sendReq = async()=>{
+      request();
+      setTasks(tasks=>[...tasks.reduce( (result,curr)=>{
+        if(curr.id === task.id) return [...result, {...curr, taskName:newName}];
+        return [...result, curr];
+       },[])]);
+    }
+    sendReq();
+
   },[]);
 
   const clearTasks = useCallback(()=>{
     setTasks(tasks=>[...tasks.filter(x=>!x.complete)]);
   },[]);
     
-  const switchTickAll = useCallback(()=>{
+  const switchTickAll = ()=>{
     setTickAll(!tickAll);
     //勾選/取消 全選範圍時，更新所有的狀態
     let newTasks = Object.assign([],tasks);
-    newTasks.forEach(x=>x.complete = tickAll);
+    newTasks.forEach(x=>x.complete = !tickAll);
     setTasks([...newTasks]);
-  },[tickAll,tasks]);
+  }
   
-
-  useEffect(()=>{
-    displayRef.current =  menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
-  },[menuType,tasks]);
 
 
   return (
     <div className="h-screen bg-green-800">
-      <Headers tick={switchTickAll} addTask={addTask}></Headers>
+      <Headers tickAll={tickAll} tick={switchTickAll} addTask={addTask}></Headers>
       <TaskContext.Provider value={tasks} >
           <TaskContent>
-            {tasks.map((x)=> <TaskItem  key={x.taskId} task={x} rename={renameTask} delete={deleteTask}></TaskItem> )}
+            {taskRef.current.map((x)=> <TaskItem  key={x.taskId} task={x} rename={renameTask} delete={deleteTask}></TaskItem> )}
           </TaskContent>
          {!!tasks.length && <Footer tabMenu={setMenuType} menuType={menuType} clear={clearTasks} />}
       </TaskContext.Provider>

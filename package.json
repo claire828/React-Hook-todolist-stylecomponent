@@ -26,7 +26,6 @@
     "watch:css": "postcss src/tailwind.css -o src/index.css",
     "watch": "chokidar \"./src/**/*.js\" -c \"npm run watch:css\"",
     "dev": "concurrently \"npm run watch\" \"npm run start\" \"npm run json-server\""
-    
   },
   "eslintConfig": {
     "extends": [

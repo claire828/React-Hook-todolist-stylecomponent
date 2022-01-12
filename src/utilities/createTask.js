@@ -3,7 +3,7 @@ let id = 0;
 
 function createTask(taskName){
     return {
-        taskId:++id,
+        taskId:++id+Math.random(),
         taskName,
         complete:false
     };

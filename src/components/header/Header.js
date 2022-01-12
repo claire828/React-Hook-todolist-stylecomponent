@@ -5,7 +5,7 @@ import tw from "twin.macro";
 
 
 export default function Headers(props){
-    const {addTask,tick} = props; 
+    const {tickAll,addTask,tick} = props; 
     const DEFAULT_MSG = 'What need to be done?';
     
     const Wrap = styled.div`${tw`flex flex-col w-[550px] mx-auto align-middle`}`;
@@ -14,6 +14,7 @@ export default function Headers(props){
     const InputContainer = styled.div`${tw `relative flex justify-start w-full`}`
     const Input = styled.input`${tw` border mx-auto h-[65px] font-size[large] w-full text-gray-500 border-color[gray] outline-none italic p-4 pl-10 shadow-sm`}`;
     const Icon = styled.label`${tw`absolute before:content-['❯'] font-size[22px] text-[#e6e6e6] mx-4 mt-4`} 
+     ${tickAll ? tw`bg-blue-500` : tw``}
         transform: rotate(90deg) `;
         
     const taskRef = useRef('');
