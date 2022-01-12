@@ -14,8 +14,8 @@ export default function Headers(props){
     const InputContainer = styled.div`${tw `relative flex justify-start w-full`}`
     const Input = styled.input`${tw` border mx-auto h-[65px] font-size[large] w-full text-gray-500 border-color[gray] outline-none italic p-4 pl-10 shadow-sm`}`;
     const Icon = styled.label`${tw`absolute before:content-['❯'] font-size[22px] text-[#e6e6e6] mx-4 mt-4`} 
-     ${tickAll ? tw`bg-blue-500` : tw``}
-        transform: rotate(90deg) `;
+     ${tickAll ? 'transform: rotate(90deg)' : 'transform: rotate(-90deg)'}
+         `;
         
     const taskRef = useRef('');
 
