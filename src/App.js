@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components/macro";
 import tw from "twin.macro";
 import Footer from "./components/footer/footer";
@@ -6,6 +6,7 @@ import Headers from "./components/header/Header";
 import TaskItem from "./components/taskItem/taskItem";
 import "./index.css";
 import "./scss/taskItem.scss";
+import { TaskContext } from "./utilities/context/context";
 import createTask from "./utilities/createTask";
 
 
@@ -27,17 +28,17 @@ function App() {
   const [menuType, setMenuType] = useState(MenuEnum.all);
   //是否有勾選全部
   const [tickAll, setTickAll] = useState(false);
+  //const [left,useLeft] = useState(tasks.filter(x=>!x.complete).length)
 
-  const left = tasks.filter(x=>!x.complete).length;
-  const displayTaskList =  menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
-
+  //const displayTaskList =  menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
+  const displayRef = useRef([]);
  
   
   const addTask =  useCallback((taskName)=>{
     if(!taskName) return;
     const task = createTask(taskName);
-    setTasks(tasks=>[...tasks,task]);
-  },[]);
+    setTasks([...tasks,task]);
+  },[tasks]);
 
   const deleteTask = useCallback((taskId)=>{
     if(!taskId) return;
@@ -66,17 +67,20 @@ function App() {
   },[tickAll,tasks]);
   
 
-  
-
+  useEffect(()=>{
+    displayRef.current =  menuType === MenuEnum.all ? tasks : tasks.filter(x=>x.complete === (menuType === MenuEnum.complete));
+  },[menuType,tasks]);
 
 
   return (
     <div className="h-screen bg-green-800">
-        <Headers tick={switchTickAll} addTask={addTask}></Headers>
-        <TaskContent>
-          {displayTaskList.map((x,inx)=> <TaskItem  key={inx} task={x} rename={renameTask} delete={deleteTask}></TaskItem> )}
-        </TaskContent>
-       { tasks.length>0 && <Footer count={left} tabMenu={setMenuType} menuType={menuType} clear={clearTasks} />}
+      <Headers tick={switchTickAll} addTask={addTask}></Headers>
+      <TaskContext.Provider value={tasks} >
+          <TaskContent>
+            {tasks.map((x)=> <TaskItem  key={x.taskId} task={x} rename={renameTask} delete={deleteTask}></TaskItem> )}
+          </TaskContent>
+         {!!tasks.length && <Footer tabMenu={setMenuType} menuType={menuType} clear={clearTasks} />}
+      </TaskContext.Provider>
     </div>
   );
 }
